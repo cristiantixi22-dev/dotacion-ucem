@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dotación 2026 – UCEM Planta Chimborazo</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f0f2f5;color:#1a1a1a;font-size:14px}
+header{background:#1a3a6b;color:#fff;padding:13px 18px}
+header strong{font-size:15px;display:block}
+header span{font-size:11px;opacity:.85}
+.tabs{display:flex;background:#fff;border-bottom:2px solid #1a3a6b}
+.tab{padding:10px 0;flex:1;text-align:center;cursor:pointer;font-weight:700;font-size:12px;color:#666;border-bottom:3px solid transparent;transition:all .2s}
+.tab.active{color:#1a3a6b;border-bottom-color:#1a3a6b}
+.page{display:none;padding:14px;max-width:980px;margin:0 auto}
+.page.active{display:block}
+.card{background:#fff;border-radius:8px;border:1px solid #dde2ea;padding:16px;margin-bottom:14px}
+.card-title{font-size:13px;font-weight:700;color:#1a3a6b;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #eee}
+label{display:block;font-size:11px;font-weight:700;color:#666;margin-bottom:4px;text-transform:uppercase}
+input,select,textarea{width:100%;padding:9px 11px;border:1px solid #ccc;border-radius:6px;font-size:13px;color:#1a1a1a;background:#fff;outline:none;transition:border .2s}
+input:focus,select:focus,textarea:focus{border-color:#1a3a6b}
+textarea{resize:vertical;min-height:58px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.search-wrap{position:relative}
+#cargoDropdown{position:absolute;background:#fff;border:1px solid #ccc;border-radius:6px;width:100%;max-height:230px;overflow-y:auto;z-index:200;box-shadow:0 6px 18px rgba(0,0,0,.12);display:none}
+#cargoDropdown div{padding:9px 13px;cursor:pointer;font-size:12px;border-bottom:1px solid #f0f0f0}
+#cargoDropdown div:hover{background:#eef2ff;color:#1a3a6b}
+.items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:8px;margin-top:10px}
+.item-row{display:flex;align-items:center;gap:8px;background:#f7f9fc;border:1px solid #dde2ea;border-radius:6px;padding:8px 10px;transition:all .15s}
+.item-row input[type=checkbox]{width:17px;height:17px;cursor:pointer;accent-color:#1a3a6b;flex-shrink:0}
+.item-label{flex:1;font-size:12px;color:#333;line-height:1.3}
+.item-qty{font-size:11px;font-weight:700;color:#1a3a6b;background:#dbe6fb;border-radius:10px;padding:2px 8px;white-space:nowrap}
+.item-row.checked{background:#e8f5e9;border-color:#a5d6a7}
+.progreso-box{margin-top:12px;padding:10px 14px;background:#f0f4ff;border-radius:6px;border:1px solid #c5d4f5}
+.progreso-box span{font-size:13px;font-weight:700;color:#1a3a6b}
+.progress-bar{height:7px;background:#e0e0e0;border-radius:4px;overflow:hidden;margin-top:6px}
+.progress-fill{height:100%;border-radius:4px;transition:width .3s,background .3s}
+.btn{padding:9px 20px;border:none;border-radius:6px;cursor:pointer;font-weight:700;font-size:13px;transition:all .2s}
+.btn-success{background:#2e7d32;color:#fff}.btn-success:hover{background:#1b5e20}
+.btn-danger{background:#c62828;color:#fff}.btn-danger:hover{background:#8e0000}
+.btn-warning{background:#e65100;color:#fff}.btn-warning:hover{background:#bf360c}
+.btn-secondary{background:#eee;color:#333}.btn-secondary:hover{background:#ddd}
+.btn-sm{padding:5px 11px;font-size:11px;font-weight:700}
+.btn-row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.sync-bar{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #dde2ea;border-radius:8px;padding:10px 14px;margin-bottom:13px;flex-wrap:wrap}
+.sync-bar input{flex:1;min-width:180px;font-size:12px}
+.sync-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px;white-space:nowrap}
+.s-ok{background:#c8e6c9;color:#1b5e20}
+.s-err{background:#ffcdd2;color:#b71c1c}
+.s-wait{background:#fff9c4;color:#f57f17}
+.status-badge{display:inline-block;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:700}
+.status-completa{background:#c8e6c9;color:#1b5e20}
+.status-parcial{background:#fff9c4;color:#f57f17}
+.filter-bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.table-wrap{overflow-x:auto;border-radius:8px;border:1px solid #dde2ea}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:700px}
+th{background:#1a3a6b;color:#fff;padding:9px 10px;text-align:left;font-size:11px;font-weight:700;white-space:nowrap}
+td{padding:8px 10px;border-bottom:1px solid #eee;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#f5f7ff}
+.falt-tag{font-size:10px;color:#b71c1c;background:#ffebee;border-radius:4px;padding:2px 6px;margin-top:3px;display:inline-block}
+.edit-tag{font-size:10px;color:#888;font-style:italic;margin-top:2px}
+.nov-box{background:#fff8e1;border:1px solid #ffe082;border-radius:5px;padding:4px 7px;font-size:11px;color:#5d4037}
+.summary-bar{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.sum-card{flex:1;min-width:110px;background:#fff;border:1px solid #dde2ea;border-radius:8px;padding:12px;text-align:center}
+.sum-card .num{font-size:26px;font-weight:700;color:#1a3a6b}
+.sum-card .lbl{font-size:11px;color:#888;margin-top:2px}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:10px;width:100%;max-width:680px;margin:auto;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.modal-header{background:#1a3a6b;color:#fff;padding:13px 18px;border-radius:10px 10px 0 0;display:flex;align-items:center;justify-content:space-between}
+.modal-header span{font-size:14px;font-weight:700}
+.modal-close{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;line-height:1}
+.modal-body{padding:18px}
+.modal-footer{padding:12px 18px;border-top:1px solid #eee;display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+.toast{position:fixed;bottom:20px;right:20px;background:#1a3a6b;color:#fff;padding:11px 18px;border-radius:8px;font-size:13px;z-index:9999;opacity:0;transform:translateY(16px);transition:all .3s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+@media(max-width:640px){
+  .grid3{grid-template-columns:1fr}
+  .items-grid{grid-template-columns:1fr 1fr!important}
+  .filter-bar input,.filter-bar select{max-width:100%}
+  .summary-bar{flex-direction:column}
+  .btn-row{flex-direction:column}
+  .btn{width:100%;text-align:center;padding:13px}
+  .sync-bar{flex-direction:column;align-items:stretch}
+  .modal-overlay{padding:8px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <strong>UCEM S.A. – Planta Chimborazo</strong>
+  <span>Registro de Entrega de Dotacion 2026</span>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('registrar',this)">+ Registrar</div>
+  <div class="tab" onclick="showTab('registros',this)">Registros</div>
+  <div class="tab" onclick="showTab('resumen',this)">Resumen</div>
+</div>
+
+<div class="page active" id="tab-registrar">
+  <div class="sync-bar">
+    <div style="font-size:12px;font-weight:700;color:#1a3a6b;white-space:nowrap">Google Sheets</div>
+    <input type="text" id="inp-url" placeholder="Pega aqui la URL del Apps Script para sincronizar entre celulares">
+    <button class="btn btn-secondary btn-sm" onclick="conectarSheets()">Conectar</button>
+    <span class="sync-badge s-wait" id="sync-badge">Sin conectar</span>
+  </div>
+  <div class="card">
+    <div class="card-title">Datos del Empleado</div>
+    <div class="grid3">
+      <div>
+        <label>Codigo</label>
+        <input type="text" id="inp-codigo" placeholder="Ej: 0012345">
+      </div>
+      <div>
+        <label>Nombre Completo</label>
+        <input type="text" id="inp-nombre" placeholder="Apellidos y nombres">
+      </div>
+      <div>
+        <label>Cargo / Perfil</label>
+        <div class="search-wrap">
+          <input type="text" id="inp-cargo" placeholder="Buscar cargo..." autocomplete="off"
+            oninput="filtrarCargos()" onfocus="filtrarCargos()" onblur="cerrarDrop()">
+          <div id="cargoDropdown"></div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:12px">
+      <label>Observaciones / Novedades</label>
+      <textarea id="inp-obs" placeholder="Ej: Falto talla de chaleco, retirar en proxima entrega..."></textarea>
+    </div>
+  </div>
+  <div class="card" id="card-items" style="display:none">
+    <div class="card-title">Articulos a entregar: <span id="label-perfil"></span></div>
+    <p style="font-size:12px;color:#666;margin-bottom:6px">Marca los articulos que SI recibio la persona:</p>
+    <div class="items-grid" id="items-grid"></div>
+    <div class="progreso-box">
+      <span id="prog-txt">0 de 0 articulos</span>
+      <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%;background:#c62828"></div></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-success" onclick="guardar()">Guardar Registro</button>
+      <button class="btn btn-secondary" onclick="limpiar()">Limpiar</button>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="tab-registros">
+  <div class="filter-bar">
+    <input type="text" id="filt-q" placeholder="Buscar nombre o codigo..." oninput="renderTabla()" style="flex:1;max-width:260px">
+    <select id="filt-estado" onchange="renderTabla()">
+      <option value="">Todos los estados</option>
+      <option value="Completa">Completa</option>
+      <option value="Parcial">Parcial</option>
+    </select>
+    <button class="btn btn-secondary btn-sm" onclick="exportCSV()">Exportar CSV</button>
+    <button class="btn btn-danger btn-sm" onclick="borrarTodo()" style="margin-left:auto">Borrar todo</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Codigo</th><th>Nombre</th><th>Cargo</th>
+          <th>Estado</th><th>Articulos</th><th>Novedades</th><th>Hora</th><th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="page" id="tab-resumen">
+  <div class="summary-bar" id="summary-bar"></div>
+  <div class="card">
+    <div class="card-title">Estado por cargo</div>
+    <div id="resumen-cargos"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <span>Editar Registro</span>
+      <button class="modal-close" onclick="cerrarModal()">x</button>
+    </div>
+    <div class="modal-body">
+      <div class="grid3" style="margin-bottom:12px">
+        <div><label>Codigo</label><input type="text" id="edit-codigo"></div>
+        <div><label>Nombre completo</label><input type="text" id="edit-nombre"></div>
+        <div><label>Cargo</label><input type="text" id="edit-cargo" readonly style="background:#f5f5f5;color:#888;font-size:11px"></div>
+      </div>
+      <div style="margin-bottom:12px">
+        <label>Observaciones / Novedades</label>
+        <textarea id="edit-obs"></textarea>
+      </div>
+      <label style="margin-bottom:8px;display:block">Articulos entregados:</label>
+      <div class="items-grid" id="edit-items-grid"></div>
+      <div class="progreso-box">
+        <span id="eprog-txt">0 de 0 articulos</span>
+        <div class="progress-bar"><div class="progress-fill" id="eprog-fill" style="width:0%;background:#c62828"></div></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="cerrarModal()">Cancelar</button>
+      <button class="btn btn-success" onclick="guardarEdicion()">Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var PERFILES = {"ADMINISTARTIVO HOMBRE":{"PANTALON MASCULINO":2,"CAMISAS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"CHALECO GENERAL":1,"CALZADO ADM. HOMBRE":1},"ADMINISTARTIVO MUJER":{"PANTALON FEMENINO":2,"BLUSA MUJER":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"CHALECO GENERAL":1,"CALZADO ADM. MUJER":1},"ADMINISTRATIVO HOMBRE- COSTA":{"PANTALON MASCULINO":2,"CAMISAS":3,"CHOMPA -COSTA":1,"CHALECO GENERAL":1,"CALZADO ADM. HOMBRE":1},"ADMINISTRATIVO MUJER- COSTA":{"PANTALON FEMENINO":2,"BLUSA MUJER":3,"CHOMPA -COSTA":1,"CHALECO GENERAL":1,"CALZADO ADM. MUJER":1},"PERSONAL TECNICO":{"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BOTIN":1,"CALZADO ADM. HOMBRE":1},"PERSONAL TECNICO MUJER":{"PANTALON FEMENINO":2,"BLUSA MUJER":1,"BLUSA MUJER TEC.":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BOTIN":1,"CALZADO ADM. MUJER":1},"TECNICO OPERATIVO -CALIDAD-OPE.MINAS":{"OVEROL GABARDINA-PLOMO":2,"TERNO INTERIOR TERMICO":2,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BOTA TEJANA":2,"CALZADO CAUCHO":1},"TECNICO OPERATIVO-CUARTOS DE CONTROL":{"OVEROL GABARDINA-PLOMO":2,"TERNO INTERIOR TERMICO":2,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BOTA TEJANA":1,"CALZADO ADM. HOMBRE":1},"OPERATIVO TURNO MUJER":{"OVEROL GABARDINA-PLOMO":2,"TERNO INTERIOR TERMICO":2,"PANTALON FEMENINO":2,"BLUSA MUJER":1,"BLUSA MUJER TEC.":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BOTIN":2},"TECNICO SUPERVISOR DE CALIDAD BODEGA":{"MANDIL GABARDINA":2,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BOTIN":1,"CALZADO ADM. HOMBRE":1},"TECNICO ELECTRICO PROGRAMADOR":{"OVEROL IGNIFUGO":2,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BOTA TEJANA":1,"BOTIN":1},"TECNICO ELECTRICO DE TURNO":{"OVEROL IGNIFUGO":2,"TERNO INTERIOR TERMICO":2,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BOTA TEJANA":2},"TECNICO ELECTRICO TANQUE PRESION BOCATOMA":{"OVEROL TERMICO IMPERMIABLE":1,"OVEROL IGNIFUGO":1,"TERNO INTERIOR TERMICO":2,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BOTA TEJANA":2},"TECNICO MECANICO LUBRICADOR AUTOMOTRIZ":{"OVEROL LEE":3,"TERNO INTERIOR TERMICO":1,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BOTA TEJANA":2},"TECNICO MECANICO TURNO AUTOMOTRIZ MINA":{"OVEROL LEE":3,"TERNO INTERIOR TERMICO":2,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BOTA TEJANA":2},"TECNICO MECANICO SOLDADOR":{"OVEROL LEE":4,"TERNO INTERIOR TERMICO":2,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BOTA TEJANA":2},"PLANIFICADOR MECANICO":{"OVEROL LEE":1,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BOTIN":1,"CALZADO ADM. HOMBRE":1},"PLANIFICADOR ELECTRICO":{"OVEROL IGNIFUGO":1,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BOTIN":1,"CALZADO ADM. HOMBRE":1},"CONDUCTOR VEHICULO PESADO POOL":{"OVEROL GABARDINA-PLOMO":2,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BOTA TEJANA":1,"BOTIN":1,"CALZADO CAUCHO":1},"CONDUCTOR VEHICULO PESADO MINAS SUPERVISOR":{"OVEROL GABARDINA-PLOMO":2,"TERNO INTERIOR TERMICO":2,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BOTA TEJANA":1,"BOTIN":1,"CALZADO CAUCHO":1},"CONDUCTOR Y ADMINISTRATIVO SERV. GENERALES":{"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"CALZADO ADM. HOMBRE":2},"PARAMEDICO":{"TERNO INTERIOR TERMICO":2,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"CHALECO DE SEGURIDAD INDUSTRIAL":1,"BOTIN":1,"CALZADO ADM. HOMBRE":1},"ENFERMERA":{"TERNO INTERIOR TERMICO":2,"PANTALON FEMENINO":2,"BLUSA MUJER":1,"BLUSA MUJER TEC.":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"ROPA DE TRABAJO TELA MEDICA":2,"CHALECO DE SEGURIDAD INDUSTRIAL":1,"BOTIN":1,"CALZADO ADM. MUJER":1},"MEDICO":{"MANDIL TELA MEDICA":1,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"CHALECO DE SEGURIDAD INDUSTRIAL":1,"BOTIN":1,"CALZADO ADM. HOMBRE":1},"ODONTOLOGA":{"MANDIL TELA MEDICA":1,"PANTALON FEMENINO":2,"BLUSA MUJER":1,"BLUSA MUJER TEC.":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"ROPA DE TRABAJO TELA MEDICA":2,"CHALECO DE SEGURIDAD INDUSTRIAL":1,"BOTIN":1,"CALZADO ADM. MUJER":1},"CONDUCTOR HORMIGONADO":{"OVEROL GABARDINA-PLOMO":3,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BUSO POLIALGODON MANGA LARGA":3,"BOTIN":2,"CALZADO CAUCHO":3},"OPERADORES Y AYUDANTES HORMIGONADO":{"OVEROL LEE":3,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":2,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BUSO POLIALGODON MANGA LARGA":3,"BOTA TEJANA":2,"CALZADO CAUCHO":3},"ESTIBADORES EN BODEGA SIERRA":{"OVEROL GABARDINA-PLOMO":3,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":2,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BUSO POLIALGODON MANGA LARGA":3,"BOTIN":2},"AUXILIAR SERVICIOS GENERALES HOMBRES":{"OVEROL GABARDINA-PLOMO":2,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BOTA TEJANA":1,"BOTIN":1,"CALZADO CAUCHO":1},"AUXILIAR SERVICIOS GENERALES MUJER":{"OVEROL GABARDINA-PLOMO":1,"MANDIL GABARDINA":1,"PANTALON FEMENINO":2,"BLUSA MUJER":1,"BLUSA MUJER TEC.":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BOTIN":1,"CALZADO ADM. MUJER":1},"CONDUCTOR MONTACARGUISTA COSTA":{"OVEROL GABARDINA-PLOMO":2,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA -COSTA":1,"BOTIN":2},"ESTIBADORES EN BODEGA COSTA":{"OVEROL GABARDINA-PLOMO":3,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":2,"CHOMPA -COSTA":1,"BUSO POLIALGODON MANGA LARGA":3,"BOTIN":2},"PERSONAL TECNICO COSTA":{"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA -COSTA":1,"BOTIN":1,"CALZADO ADM. HOMBRE":1},"PERSONAL TECNICO MUJER COSTA":{"PANTALON FEMENINO":2,"BLUSA MUJER":1,"BLUSA MUJER TEC.":3,"CHOMPA -COSTA":1,"CALZADO ADM. MUJER":1},"MONTACARGISTAS ESTIBADORES CEMENTO":{"OVEROL GABARDINA-PLOMO":2,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BOTIN":2},"SEGURIDAD INTEGRAL HOMBRE TURNO":{"TERNO INTERIOR TERMICO":2,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"CHALECO DE SEGURIDAD INDUSTRIAL":1,"BOTIN":1,"CALZADO ADM. HOMBRE":1},"SEGURIDAD INTEGRAL MUJER TURNO":{"TERNO INTERIOR TERMICO":2,"PANTALON FEMENINO":2,"BLUSA MUJER":1,"BLUSA MUJER TEC.":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"CHALECO DE SEGURIDAD INDUSTRIAL":1,"BOTIN":1,"CALZADO ADM. MUJER":1},"SEGURIDAD INTEGRAL ADMINISTRATIVO HOMBRES":{"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"CHALECO DE SEGURIDAD INDUSTRIAL":1,"BOTIN":1,"CALZADO ADM. HOMBRE":1},"SEGURIDAD INTEGRAL ADMINISTRATIVO MUJER":{"PANTALON FEMENINO":2,"BLUSA MUJER":1,"BLUSA MUJER TEC.":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"CHALECO DE SEGURIDAD INDUSTRIAL":1,"BOTIN":1,"CALZADO ADM. MUJER":1},"INSPECTOR DE MANTENIMIENTO":{"OVEROL GABARDINA-PLOMO":2,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BOTA TEJANA":1,"BOTIN":1},"OPERATIVO PREFABRICADOS":{"OVEROL GABARDINA-PLOMO":3,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":2,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BUSO POLIALGODON MANGA LARGA":4,"BOTA TEJANA":1,"BOTIN":1},"OPERATIVO PREFABRICADOS COSTA":{"OVEROL GABARDINA-PLOMO":3,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":2,"CHOMPA -COSTA":1,"BUSO POLIALGODON MANGA LARGA":4,"BOTA TEJANA":1,"BOTIN":1},"ANALISTA CALIDAD HOMBRE COSTA":{"MANDIL GABARDINA":2,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA -COSTA":1,"BOTIN":2},"ANALISTA CALIDAD MUJER COSTA":{"MANDIL GABARDINA":2,"PANTALON FEMENINO":2,"BLUSA MUJER":1,"BLUSA MUJER TEC.":3,"CHOMPA -COSTA":1,"BOTIN":2},"TECNICO MINAS HOMBRE":{"TERNO INTERIOR TERMICO":2,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BOTA TEJANA":2,"CALZADO CAUCHO":1},"TECNICO MINAS MUJER":{"TERNO INTERIOR TERMICO":2,"PANTALON FEMENINO":2,"BLUSA MUJER":1,"BLUSA MUJER TEC.":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BOTA TEJANA":1,"BOTIN":1,"CALZADO CAUCHO":1},"TECNICO CALIDAD HORMIGON PREFA":{"MANDIL GABARDINA":2,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BOTA TEJANA":1,"BOTIN":1},"PERSONAL CON RESTRICCION MEDICO MASCULINO":{"MANDIL GABARDINA":2,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"CALZADO ADM. HOMBRE":2},"SUPERVISOR OPERATIVO":{"OVEROL GABARDINA-PLOMO":2,"TERNO INTERIOR TERMICO":2,"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"BOTA TEJANA":1,"BOTIN":1},"EJECUTIVO DE VENTAS ENCARGADO DE AGENCIA":{"PANTALON MASCULINO":2,"CAMISAS":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"CHALECO GENERAL":1,"CALZADO ADM. HOMBRE":2},"EJECUTIVO DE VENTAS ENCARGADO DE AGENCIA MUJER":{"PANTALON FEMENINO":2,"BLUSA MUJER":3,"CHOMPA DE SEGURIDAD LARGA":1,"CHOMPA TERMICA":1,"CHALECO GENERAL":1,"CALZADO ADM. MUJER":2},"EJECUTIVO DE VENTAS ENCARGADO DE AGENCIA COSTA":{"PANTALON MASCULINO":2,"CAMISAS":3,"CHOMPA -COSTA":1,"CHALECO GENERAL":1,"CALZADO ADM. HOMBRE":2},"EJECUTIVO DE VENTAS ENCARGADO DE AGENCIA COSTA MUJER":{"PANTALON FEMENINO":2,"BLUSA MUJER":3,"CHOMPA -COSTA":1,"CHALECO GENERAL":1,"CALZADO ADM. MUJER":2},"OPERADOR MAQ. PESADA COSTA":{"PANTALON MASCULINO":2,"CAMISAS":1,"CAMISAS TECNICOS":3,"CHOMPA -COSTA":1,"BOTA TEJANA":2,"CALZADO CAUCHO":1}};
+
+var perfilActual = null;
+var editandoId   = null;
+
+function getRegs()   { try { return JSON.parse(localStorage.getItem('dotacion_2026') || '[]'); } catch(e) { return []; } }
+function saveRegs(r) { localStorage.setItem('dotacion_2026', JSON.stringify(r)); }
+
+function showTab(id, el) {
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  document.getElementById('tab-' + id).classList.add('active');
+  el.classList.add('active');
+  if (id === 'registros') renderTabla();
+  if (id === 'resumen')   renderResumen();
+}
+
+function filtrarCargos() {
+  var val  = document.getElementById('inp-cargo').value.trim().toUpperCase();
+  var drop = document.getElementById('cargoDropdown');
+  if (!val) { drop.style.display = 'none'; return; }
+  var matches = Object.keys(PERFILES).filter(function(p) { return p.toUpperCase().indexOf(val) !== -1; }).slice(0, 14);
+  if (!matches.length) { drop.style.display = 'none'; return; }
+  drop.innerHTML = matches.map(function(m) {
+    return '<div onmousedown="seleccionarCargo(this.getAttribute(\'data-p\'))" data-p="' + m.replace(/"/g,'&quot;') + '">' + m + '</div>';
+  }).join('');
+  drop.style.display = 'block';
+}
+
+function cerrarDrop() { setTimeout(function() { document.getElementById('cargoDropdown').style.display = 'none'; }, 180); }
+
+function seleccionarCargo(perfil) {
+  perfilActual = perfil;
+  document.getElementById('inp-cargo').value = perfil;
+  document.getElementById('cargoDropdown').style.display = 'none';
+  document.getElementById('label-perfil').textContent = perfil;
+  renderItems('items-grid', perfil, null, 'prog-txt', 'prog-fill');
+  document.getElementById('card-items').style.display = 'block';
+}
+
+function renderItems(gridId, perfil, entregadosMap, txtId, fillId) {
+  var items = PERFILES[perfil];
+  if (!items) return;
+  var grid   = document.getElementById(gridId);
+  var prefix = (gridId === 'items-grid') ? 'chk-' : 'echk-';
+  grid.innerHTML = '';
+  Object.keys(items).forEach(function(item) {
+    var qty     = items[item];
+    var checked = entregadosMap && entregadosMap[item];
+    var div = document.createElement('div');
+    div.className = 'item-row' + (checked ? ' checked' : '');
+    var chkId = prefix + item.replace(/[^a-zA-Z0-9]/g, '_');
+    div.innerHTML = '<input type="checkbox" id="' + chkId + '"' + (checked ? ' checked' : '')
+      + ' onchange="actualizarProgreso(\'' + gridId + '\',\'' + perfil.replace(/'/g,"\\'") + '\',\'' + txtId + '\',\'' + fillId + '\')">'
+      + '<label for="' + chkId + '" class="item-label">' + item + '</label>'
+      + '<span class="item-qty">x' + qty + '</span>';
+    grid.appendChild(div);
+  });
+  actualizarProgreso(gridId, perfil, txtId, fillId);
+}
+
+function actualizarProgreso(gridId, perfil, txtId, fillId) {
+  var items   = Object.keys(PERFILES[perfil] || {});
+  var prefix  = (gridId === 'items-grid') ? 'chk-' : 'echk-';
+  var checked = 0;
+  items.forEach(function(it) {
+    var el = document.getElementById(prefix + it.replace(/[^a-zA-Z0-9]/g, '_'));
+    if (el && el.checked) checked++;
+  });
+  var pct = items.length ? Math.round(checked / items.length * 100) : 0;
+  document.getElementById(txtId).textContent = checked + ' de ' + items.length + ' articulos entregados (' + pct + '%)';
+  var fill = document.getElementById(fillId);
+  fill.style.width = pct + '%';
+  fill.style.background = pct === 100 ? '#2e7d32' : pct >= 50 ? '#f57f17' : '#c62828';
+  document.querySelectorAll('#' + gridId + ' .item-row').forEach(function(row) {
+    var chk = row.querySelector('input[type=checkbox]');
+    row.classList.toggle('checked', !!(chk && chk.checked));
+  });
+}
+
+function guardar() {
+  var codigo = document.getElementById('inp-codigo').value.trim();
+  var nombre = document.getElementById('inp-nombre').value.trim();
+  var obs    = document.getElementById('inp-obs').value.trim();
+  if (!codigo || !nombre || !perfilActual) { showToast('Completa codigo, nombre y cargo', true); return; }
+  var items = PERFILES[perfilActual];
+  var entregados = {}, faltantes = {};
+  Object.keys(items).forEach(function(it) {
+    var chk = document.getElementById('chk-' + it.replace(/[^a-zA-Z0-9]/g, '_'));
+    if (chk && chk.checked) entregados[it] = items[it];
+    else faltantes[it] = items[it];
+  });
+  var reg = {
+    id: Date.now(),
+    codigo: codigo, nombre: nombre, cargo: perfilActual,
+    estado: Object.keys(faltantes).length === 0 ? 'Completa' : 'Parcial',
+    entregados: entregados, faltantes: faltantes,
+    observaciones: obs, hora: new Date().toLocaleString('es-EC')
+  };
+  var regs = getRegs();
+  regs.unshift(reg);
+  saveRegs(regs);
+  enviarSheets(reg);
+  showToast('Registro guardado correctamente');
+  limpiar();
+}
+
+function limpiar() {
+  document.getElementById('inp-codigo').value = '';
+  document.getElementById('inp-nombre').value = '';
+  document.getElementById('inp-cargo').value  = '';
+  document.getElementById('inp-obs').value    = '';
+  document.getElementById('items-grid').innerHTML = '';
+  document.getElementById('prog-txt').textContent = '0 de 0 articulos';
+  document.getElementById('prog-fill').style.width = '0%';
+  document.getElementById('card-items').style.display = 'none';
+  perfilActual = null;
+}
+
+function renderTabla() {
+  var regs   = getRegs();
+  var q      = (document.getElementById('filt-q').value || '').toLowerCase();
+  var estado = document.getElementById('filt-estado').value || '';
+  var filt   = regs.filter(function(r) {
+    return (!q || r.nombre.toLowerCase().indexOf(q) !== -1 || r.codigo.toLowerCase().indexOf(q) !== -1)
+        && (!estado || r.estado === estado);
+  });
+  var tb = document.getElementById('tabla-body');
+  if (!filt.length) {
+    tb.innerHTML = '<tr><td colspan="9" style="text-align:center;color:#999;padding:24px">No hay registros</td></tr>';
+    return;
+  }
+  tb.innerHTML = filt.map(function(r, i) {
+    var tot  = Object.keys(r.entregados||{}).length + Object.keys(r.faltantes||{}).length;
+    var rec  = Object.keys(r.entregados||{}).length;
+    var cls  = r.estado === 'Completa' ? 'status-completa' : 'status-parcial';
+    var falt = Object.keys(r.faltantes||{});
+    var faltStr = falt.length ? '<div class="falt-tag">Falta: ' + falt.join(', ') + '</div>' : '';
+    var editStr = r.editado ? '<div class="edit-tag">Editado: ' + r.editado + '</div>' : '';
+    var novStr  = r.observaciones
+      ? '<div class="nov-box">! ' + r.observaciones + '</div>'
+      : '<span style="color:#ccc;font-size:11px">-</span>';
+    return '<tr>'
+      + '<td>' + (i+1) + '</td>'
+      + '<td>' + r.codigo + '</td>'
+      + '<td><strong>' + r.nombre + '</strong>' + editStr + '</td>'
+      + '<td style="font-size:11px;max-width:150px">' + r.cargo + '</td>'
+      + '<td><span class="status-badge ' + cls + '">' + r.estado + '</span></td>'
+      + '<td>' + rec + '/' + tot + faltStr + '</td>'
+      + '<td style="max-width:170px">' + novStr + '</td>'
+      + '<td style="font-size:11px;color:#666;white-space:nowrap">' + r.hora + '</td>'
+      + '<td style="white-space:nowrap">'
+      + '<button class="btn btn-warning btn-sm" style="margin-bottom:4px" data-id="' + r.id + '" onclick="abrirEditar(+this.dataset.id)">Editar</button><br>'
+      + '<button class="btn btn-danger btn-sm" data-id="' + r.id + '" onclick="borrar(+this.dataset.id)">Borrar</button>'
+      + '</td></tr>';
+  }).join('');
+}
+
+function borrar(id) {
+  if (!confirm('Borrar este registro?')) return;
+  saveRegs(getRegs().filter(function(r) { return r.id !== id; }));
+  renderTabla();
+  showToast('Registro borrado');
+}
+
+function borrarTodo() {
+  if (!confirm('Borrar TODOS los registros? No se puede deshacer.')) return;
+  saveRegs([]);
+  renderTabla();
+  showToast('Todos los registros borrados');
+}
+
+function abrirEditar(id) {
+  var reg = getRegs().find(function(r) { return r.id === id; });
+  if (!reg) return;
+  editandoId = id;
+  document.getElementById('edit-codigo').value = reg.codigo;
+  document.getElementById('edit-nombre').value = reg.nombre;
+  document.getElementById('edit-cargo').value  = reg.cargo;
+  document.getElementById('edit-obs').value    = reg.observaciones || '';
+  renderItems('edit-items-grid', reg.cargo, reg.entregados, 'eprog-txt', 'eprog-fill');
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function guardarEdicion() {
+  var regs = getRegs();
+  var idx  = regs.findIndex(function(r) { return r.id === editandoId; });
+  if (idx === -1) return;
+  var reg    = regs[idx];
+  var perfil = PERFILES[reg.cargo];
+  var entregados = {}, faltantes = {};
+  if (perfil) {
+    Object.keys(perfil).forEach(function(it) {
+      var chk = document.getElementById('echk-' + it.replace(/[^a-zA-Z0-9]/g, '_'));
+      if (chk && chk.checked) entregados[it] = perfil[it];
+      else faltantes[it] = perfil[it];
+    });
+  }
+  regs[idx] = Object.assign({}, reg, {
+    codigo: document.getElementById('edit-codigo').value.trim(),
+    nombre: document.getElementById('edit-nombre').value.trim(),
+    observaciones: document.getElementById('edit-obs').value.trim(),
+    entregados: entregados, faltantes: faltantes,
+    estado: Object.keys(faltantes).length === 0 ? 'Completa' : 'Parcial',
+    editado: new Date().toLocaleString('es-EC')
+  });
+  saveRegs(regs);
+  cerrarModal();
+  renderTabla();
+  showToast('Registro actualizado correctamente');
+}
+
+function cerrarModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  editandoId = null;
+}
+
+function renderResumen() {
+  var regs = getRegs();
+  var total = regs.length;
+  var completas = regs.filter(function(r) { return r.estado === 'Completa'; }).length;
+  var parciales = regs.filter(function(r) { return r.estado === 'Parcial'; }).length;
+  document.getElementById('summary-bar').innerHTML =
+    '<div class="sum-card"><div class="num">' + total + '</div><div class="lbl">Total registros</div></div>'
+    + '<div class="sum-card" style="border-color:#a5d6a7"><div class="num" style="color:#2e7d32">' + completas + '</div><div class="lbl">Entregas completas</div></div>'
+    + '<div class="sum-card" style="border-color:#ffe082"><div class="num" style="color:#f57f17">' + parciales + '</div><div class="lbl">Entregas parciales</div></div>'
+    + '<div class="sum-card"><div class="num">' + (total ? Math.round(completas/total*100) : 0) + '%</div><div class="lbl">Tasa completitud</div></div>';
+  var porCargo = {};
+  regs.forEach(function(r) {
+    if (!porCargo[r.cargo]) porCargo[r.cargo] = {c:0,p:0};
+    if (r.estado === 'Completa') porCargo[r.cargo].c++; else porCargo[r.cargo].p++;
+  });
+  var div  = document.getElementById('resumen-cargos');
+  var keys = Object.keys(porCargo);
+  if (!keys.length) { div.innerHTML = '<p style="color:#999;text-align:center;padding:20px">Sin registros aun</p>'; return; }
+  div.innerHTML = keys.map(function(cargo) {
+    var ct = porCargo[cargo], tot = ct.c + ct.p, pct = Math.round(ct.c/tot*100);
+    return '<div style="margin-bottom:10px;padding:10px 14px;border:1px solid #dde2ea;border-radius:6px">'
+      + '<div style="display:flex;justify-content:space-between;align-items:center">'
+      + '<span style="font-size:12px;font-weight:700">' + cargo + '</span>'
+      + '<span style="font-size:11px;color:#666">' + ct.c + ' completa / ' + ct.p + ' parcial</span></div>'
+      + '<div class="progress-bar" style="margin-top:6px"><div class="progress-fill" style="width:' + pct + '%;background:' + (pct===100?'#2e7d32':'#f57f17') + '"></div></div></div>';
+  }).join('');
+}
+
+function exportCSV() {
+  var regs = getRegs();
+  if (!regs.length) { showToast('No hay registros', true); return; }
+  var header = ['ID','Hora','Codigo','Nombre','Cargo','Estado','Entregados','Faltantes','Observaciones'];
+  var rows = regs.map(function(r) { return [
+    r.id, r.hora, r.codigo, r.nombre, r.cargo, r.estado,
+    Object.keys(r.entregados||{}).join(' | '),
+    Object.keys(r.faltantes||{}).join(' | '),
+    r.observaciones||''
+  ]; });
+  var csv = [header].concat(rows).map(function(row) {
+    return row.map(function(v) { return '"' + String(v||'').replace(/"/g,'""') + '"'; }).join(',');
+  }).join('\n');
+  var blob = new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8;'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'dotacion_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  showToast('CSV descargado');
+}
+
+function conectarSheets() {
+  var url = document.getElementById('inp-url').value.trim();
+  if (!url) { showToast('Pega la URL del Apps Script', true); return; }
+  localStorage.setItem('sheets_url', url);
+  setBadge('wait','Verificando...');
+  fetch(url + '?action=ping')
+    .then(function(r) { return r.json(); })
+    .then(function(d) { if (d.ok) { setBadge('ok','Conectado'); showToast('Conectado a Google Sheets'); } else throw new Error(); })
+    .catch(function() { setBadge('err','Error de conexion'); });
+}
+
+function setBadge(type, msg) {
+  var el = document.getElementById('sync-badge');
+  el.textContent = msg;
+  el.className = 'sync-badge s-' + type;
+}
+
+function enviarSheets(reg) {
+  var url = localStorage.getItem('sheets_url');
+  if (!url) return;
+  setBadge('wait','Guardando...');
+  fetch(url + '?action=add', {method:'POST', body: JSON.stringify(reg)})
+    .then(function(r) { return r.json(); })
+    .then(function(d) { if (d.ok) setBadge('ok','Sincronizado'); else throw new Error(); })
+    .catch(function() { setBadge('err','Error sync'); showToast('Guardado local, fallo sync', true); });
+}
+
+function showToast(msg, err) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = err ? '#c62828' : '#1a3a6b';
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 2800);
+}
+
+window.addEventListener('load', function() {
+  var url = localStorage.getItem('sheets_url');
+  if (url) { document.getElementById('inp-url').value = url; setBadge('ok','URL guardada'); }
+});
+</script>
+</body>
+</html>
