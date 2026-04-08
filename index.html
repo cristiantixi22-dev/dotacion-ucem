@@ -341,13 +341,27 @@ function renderTabla(){
 
 function borrar(id){
   if(!confirm('Borrar este registro?'))return;
-  saveRegs(getRegs().filter(function(r){return r.id!==id;}));
+  var regs=getRegs();
+  var reg=regs.find(function(r){return r.id===id;});
+  saveRegs(regs.filter(function(r){return r.id!==id;}));
   renderTabla();showToast('Registro borrado');
+  if(reg){
+    var url=localStorage.getItem('sheets_url');
+    if(url){
+      fetch(url+'?action=delete',{method:'POST',body:JSON.stringify({
+        codigo:reg.codigo,nombre:reg.nombre,hora:reg.hora
+      })}).catch(function(){});
+    }
+  }
 }
 
 function borrarTodo(){
   if(!confirm('Borrar TODOS los registros?'))return;
   saveRegs([]);renderTabla();showToast('Todos los registros borrados');
+  var url=localStorage.getItem('sheets_url');
+  if(url){
+    fetch(url+'?action=deleteAll',{method:'POST',body:JSON.stringify({})}).catch(function(){});
+  }
 }
 
 function abrirEditar(id){
