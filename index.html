@@ -333,8 +333,8 @@ function renderTabla(){
       +'<td style="max-width:170px">'+novStr+'</td>'
       +'<td style="font-size:11px;color:#666;white-space:nowrap">'+r.hora+'</td>'
       +'<td style="white-space:nowrap">'
-      +'<button class="btn btn-warning btn-sm" style="margin-bottom:4px" data-id="'+r.id+'" onclick="abrirEditar(+this.dataset.id)">Editar</button><br>'
-      +'<button class="btn btn-danger btn-sm" data-id="'+r.id+'" onclick="borrar(+this.dataset.id)">Borrar</button>'
+      +'<button class="btn btn-warning btn-sm" style="margin-bottom:4px" data-id="'+r.id+'" onclick="abrirEditar(this.dataset.id)">Editar</button><br>'
+      +'<button class="btn btn-danger btn-sm" data-id="'+r.id+'" onclick="borrar(this.dataset.id)">Borrar</button>'
       +'</td></tr>';
   }).join('');
 }
@@ -342,8 +342,8 @@ function renderTabla(){
 function borrar(id){
   if(!confirm('Borrar este registro?'))return;
   var regs=getRegs();
-  var reg=regs.find(function(r){return r.id===id;});
-  saveRegs(regs.filter(function(r){return r.id!==id;}));
+  var reg=regs.find(function(r){return String(r.id)===String(id);});
+  saveRegs(regs.filter(function(r){return String(r.id)!==String(id);}));
   renderTabla();showToast('Registro borrado');
   if(reg){
     var url=localStorage.getItem('sheets_url');
@@ -369,7 +369,7 @@ function borrarTodo(){
 }
 
 function abrirEditar(id){
-  var reg=getRegs().find(function(r){return r.id===id;});
+  var reg=getRegs().find(function(r){return String(r.id)===String(id);});
   if(!reg)return;
   editandoId=id;
   document.getElementById('edit-codigo').value=reg.codigo;
@@ -382,7 +382,7 @@ function abrirEditar(id){
 
 function guardarEdicion(){
   var regs=getRegs();
-  var idx=regs.findIndex(function(r){return r.id===editandoId;});
+  var idx=regs.findIndex(function(r){return String(r.id)===String(editandoId);});
   if(idx===-1)return;
   var reg=regs[idx];
   var perfil=PERFILES[reg.cargo];
