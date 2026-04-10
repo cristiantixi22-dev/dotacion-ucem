@@ -444,7 +444,12 @@ function conectarSheets(){
   if(!url){showToast('Pega la URL del Apps Script',true);return;}
   localStorage.setItem('sheets_url',url);setBadge('wait','Verificando...');
   fetch(url+'?action=ping').then(function(r){return r.json();})
-    .then(function(d){if(d.ok){setBadge('ok','Conectado');showToast('Conectado a Google Sheets');}else throw new Error();})
+    .then(function(d){
+      if(d.ok){
+        showToast('Conectado! Cargando registros...');
+        cargarDesdeSheets(url);
+      } else throw new Error();
+    })
     .catch(function(){setBadge('err','Error de conexion');});
 }
 
@@ -467,8 +472,54 @@ function showToast(msg,err){
 
 window.addEventListener('load',function(){
   var url=localStorage.getItem('sheets_url');
-  if(url){document.getElementById('inp-url').value=url;setBadge('ok','URL guardada');}
+  if(url){
+    document.getElementById('inp-url').value=url;
+    setBadge('wait','Cargando...');
+    cargarDesdeSheets(url);
+  }
 });
+
+function cargarDesdeSheets(url){
+  fetch(url+'?action=getAll')
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(d.ok && d.registros && d.registros.length){
+        // Convertir registros de Sheets al formato local
+        var regs = d.registros.map(function(r){
+          // Reconstruir entregados y faltantes desde strings
+          var entregados = {};
+          var faltantes  = {};
+          if(r.entregadosStr){
+            r.entregadosStr.split(' | ').forEach(function(it){
+              if(it.trim()) entregados[it.trim()] = 1;
+            });
+          }
+          if(r.faltantesStr){
+            r.faltantesStr.split(' | ').forEach(function(it){
+              if(it.trim()) faltantes[it.trim()] = 1;
+            });
+          }
+          return {
+            id: r.id,
+            hora: r.hora,
+            codigo: r.codigo,
+            nombre: r.nombre,
+            cargo: r.cargo,
+            estado: r.estado,
+            entregados: entregados,
+            faltantes: faltantes,
+            observaciones: r.observaciones
+          };
+        });
+        saveRegs(regs);
+        setBadge('ok','Conectado ('+regs.length+' registros)');
+        showToast('Registros cargados desde Sheets');
+      } else {
+        setBadge('ok','Conectado');
+      }
+    })
+    .catch(function(){setBadge('err','Error al cargar');});
+}
 </script>
 </body>
 </html>
