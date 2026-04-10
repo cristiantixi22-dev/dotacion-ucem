@@ -349,7 +349,11 @@ function borrar(id){
     var url=localStorage.getItem('sheets_url');
     if(url){
       fetch(url+'?action=delete',{method:'POST',body:JSON.stringify({
-        codigo:reg.codigo,nombre:reg.nombre,hora:reg.hora
+        codigo:reg.codigo,
+        nombre:reg.nombre,
+        hora:reg.hora,
+        hoja:reg.hoja||'',
+        rowIndex:reg.rowIndex||0
       })}).catch(function(){});
     }
   }
@@ -501,19 +505,22 @@ function cargarDesdeSheets(url){
           }
           return {
             id: r.id,
-            hora: r.hora,
-            codigo: r.codigo,
-            nombre: r.nombre,
-            cargo: r.cargo,
-            estado: r.estado,
+            hora: String(r.hora||''),
+            codigo: String(r.codigo||''),
+            nombre: String(r.nombre||''),
+            cargo: String(r.cargo||''),
+            estado: String(r.estado||''),
             entregados: entregados,
             faltantes: faltantes,
-            observaciones: r.observaciones
+            observaciones: String(r.observaciones||''),
+            hoja: String(r.hoja||''),
+            rowIndex: r.rowIndex||0
           };
         });
         saveRegs(regs);
         setBadge('ok','Conectado ('+regs.length+' registros)');
         showToast('Registros cargados desde Sheets');
+        renderTabla();
       } else {
         setBadge('ok','Conectado');
       }
